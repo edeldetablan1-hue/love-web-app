@@ -1,0 +1,172 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Pag-ibig App 💖";
+}
+
+<!-- I-inject ang Custom CSS para sa Love Theme -->
+<style>
+    body {
+        /* Soft pink gradient background */
+        background: linear-gradient(135deg, #ffe6f2 0%, #ffb3d9 100%);
+        min-height: 100vh;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .love-card {
+        background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white */
+        border-radius: 20px;
+        box-shadow: 0 10px 25px rgba(255, 77, 148, 0.2); /* Pinkish shadow */
+        border: 2px solid #ff99cc;
+        max-width: 480px;
+        margin: auto;
+        padding: 40px;
+        margin-top: 10vh;
+        position: relative;
+        min-height: 300px; /* Sapat na espasyo para sa pag-iwas */
+        overflow: hidden; /* Para hindi lumabas sa card ang No button */
+    }
+
+    .love-title {
+        color: #e60073; /* Deep pink */
+        font-weight: 700;
+        margin-bottom: 30px;
+    }
+
+    .btn-yes {
+        background-color: #ff3399; /* Bright love pink */
+        border-color: #ff3399;
+        color: white;
+        padding: 12px 30px;
+        font-weight: bold;
+        border-radius: 50px;
+        font-size: 1.1em;
+        transition: all 0.3s ease;
+    }
+
+    .btn-yes:hover {
+        background-color: #e60073;
+        transform: scale(1.05);
+        color: white;
+    }
+
+    .btn-no {
+        background-color: #f8f9fa; /* Light grey */
+        border: 1px solid #ced4da;
+        color: #6c757d;
+        padding: 12px 30px;
+        border-radius: 50px;
+        font-size: 1.1em;
+        /* Mahalaga para sa pag-iwas */
+        position: absolute;
+        transition: transform 0.1s ease-out; /* Smooth evasion */
+        z-index: 10;
+    }
+
+    /* Lagyan ng decorative hearts sa background */
+    .bg-heart {
+        position: absolute;
+        color: rgba(255, 102, 178, 0.1);
+        z-index: -1;
+    }
+</style>
+
+<div class="text-center love-card position-relative">
+    <!-- Decorative background elements -->
+    <span class="bg-heart fs-1" style="top: 10px; left: 20px;">❤️</span>
+    <span class="bg-heart fs-2" style="bottom: 20px; right: 30px;">💖</span>
+
+    <!-- =========================
+         ANG TATLONG TANONG
+         ========================= -->
+
+    <!-- Tanong 1 -->
+    <div id="step1" class="step-container">
+        <h2 class="love-title">Mahal mo ba ako? 💖</h2>
+        <div class="mt-5 d-flex justify-content-center align-items-center gap-4" style="min-height: 80px;">
+            <button class="btn btn-yes" onclick="nextStep(2)">Yes! 😊</button>
+            <button id="noBtn1" class="btn btn-no" onmouseover="moveNoButton('noBtn1')" onclick="moveNoButton('noBtn1')">No 😢</button>
+        </div>
+    </div>
+
+    <!-- Tanong 2 -->
+    <div id="step2" class="step-container" style="display: none;">
+        <h2 class="love-title">Sure ka na mahal moko? 🤔</h2>
+        <p class="text-muted fs-5">Pag-isipan mong mabuti...</p>
+        <div class="mt-5 d-flex justify-content-center align-items-center gap-4" style="min-height: 80px;">
+            <button class="btn btn-yes" onclick="nextStep(3)">Oo sure na sure! ✨</button>
+            <button id="noBtn2" class="btn btn-no" onmouseover="moveNoButton('noBtn2')" onclick="moveNoButton('noBtn2')">Hindi 🥺</button>
+        </div>
+    </div>
+
+    <!-- Tanong 3 (Pinakamakulit) -->
+    <div id="step3" class="step-container" style="display: none;">
+        <h2 class="love-title">As in sure na sure na sure ba talaga?! 🥺👉👈</h2>
+        <p class="text-muted fs-5">Walang bawi-an ha?</p>
+        <div class="mt-5 d-flex justify-content-center align-items-center gap-4" style="min-height: 80px;">
+            <button class="btn btn-yes btn-lg" onclick="nextStep(4)">SURE NA SURE! 🔥</button>
+            <button id="noBtn3" class="btn btn-no" onmouseover="moveNoButton('noBtn3')" onclick="moveNoButton('noBtn3')">Hindi talaga 🙈</button>
+        </div>
+    </div>
+
+    <!-- =========================
+         FINAL MESSAGE
+         ========================= -->
+    <div id="step4" class="step-container" style="display: none;">
+        <h1 class="text-danger fw-bold display-4">I love you too! ❤️</h1>
+        <p class="mt-3 fs-4 text-muted">Sabi ko na nga ba eh! 😘</p>
+        <span class="display-1">🥰</span>
+        <br />
+        <button class="btn btn-outline-secondary btn-sm mt-5 rounded-pill" onclick="resetAll()">Ulitin ang Kulit 🔄</button>
+    </div>
+
+</div>
+
+<script>
+    function nextStep(stepNumber) {
+        // I-hide muna lahat ng steps
+        const steps = document.querySelectorAll('.step-container');
+        steps.forEach(step => step.style.display = 'none');
+
+        // I-show lang ang kasalukuyang step
+        const currentStep = document.getElementById('step' + stepNumber);
+        if (currentStep) {
+            currentStep.style.display = 'block';
+        }
+    }
+
+    function moveNoButton(buttonId) {
+        const btn = document.getElementById(buttonId);
+        const card = document.querySelector('.love-card');
+        
+        // Kunin ang sukat ng card para hindi lumabas ang button
+        const cardWidth = card.offsetWidth;
+        const cardHeight = card.offsetHeight;
+        const btnWidth = btn.offsetWidth;
+        const btnHeight = btn.offsetHeight;
+
+        // Kalkulahin ang ligtas na maximum coordinates (may padding)
+        const maxX = cardWidth - btnWidth - 40; // 20px padding bawat gilid
+        const maxY = cardHeight - btnHeight - 80; // Mas malaking vertical padding
+
+        // Random coordinates sa loob ng card
+        const randomX = Math.floor(Math.random() * maxX) + 20;
+        const randomY = Math.floor(Math.random() * maxY) + 40;
+
+        // Gamitin ang left/top dahil 'absolute' position ang No button
+        btn.style.left = randomX + 'px';
+        btn.style.top = randomY + 'px';
+    }
+
+    function resetAll() {
+        // I-reset ang posisyon ng lahat ng No buttons
+        const noButtons = document.querySelectorAll('.btn-no');
+        noButtons.forEach(btn => {
+            btn.style.left = ''; // Babalik sa default position ng flexbox
+            btn.style.top = '';
+        });
+        
+        // Bumalik sa unang tanong
+        nextStep(1);
+    }
+</script>
